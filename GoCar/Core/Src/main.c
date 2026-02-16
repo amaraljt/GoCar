@@ -90,21 +90,38 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+  //HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1) { 
-    /* USER CODE END WHILE */ 
-    htim2.Instance->CCR1 = 50; // duty cycle is 1ms 
-    HAL_Delay(2000); 
-    htim2.Instance->CCR1 = 75; // duty cycle is 1.5ms 
-    HAL_Delay(2000); 
-    htim2.Instance->CCR1 = 100; // duty cycle is 2ms 
-    HAL_Delay(2000); 
-    /* USER CODE BEGIN 3 */ 
-  } /* USER CODE END 3 */
+    /* USER CODE END WHILE */
+    //htim2.Instance->CCR1 = 0;
+    //HAL_Delay(200);
+    /* Forward */
+    //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+    //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_SET);
+    //htim2.Instance->CCR1 = 700; // duty cycle is 1ms
+    //HAL_Delay(3000);
+
+    /* Stop */
+    //htim2.Instance->CCR1 = 0;
+    //HAL_Delay(200);
+
+    /* Reverse */
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_RESET);
+    HAL_Delay(3000); 
+
+    /* Brake */
+    //htim2.Instance->CCR1 = 0;
+    /*HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, GPIO_PIN_SET);
+    HAL_Delay(2000);*/
+  } 
+    /* USER CODE BEGIN 3 */
+  /* USER CODE END 3 */
 }
 
 /**
@@ -168,7 +185,7 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 319;
+  htim2.Init.Prescaler = 7;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 999;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -214,12 +231,23 @@ static void MX_TIM2_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* USER CODE BEGIN MX_GPIO_Init_1 */
 
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1|GPIO_PIN_2, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : PA1 PA2 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_2;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
