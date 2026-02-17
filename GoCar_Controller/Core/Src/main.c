@@ -11,6 +11,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "as5600_driver.h"
 #include "stm32f4xx_hal_uart.h"
 #include <stdio.h>
 #include "lcd_driver.h"
@@ -43,11 +44,14 @@ int main(void)
 
   while (1)
   {
-    // Display Strings
+    uint16_t g_raw_angle = read_raw_angle(&hi2c1);
+
+    char buffer[20];
+    sprintf(buffer, "RAW ANGLE : %4d", g_raw_angle);
     lcd_put_cur(0, 0);
-    lcd_send_string ("HELLO WORLD");
-    lcd_put_cur(1, 0);
-    lcd_send_string("from DOMM");
+    lcd_send_string(buffer);
+    HAL_Delay(200);
+    //lcd_clear();  
   }
 }
 

@@ -47,6 +47,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     Core/Src/main.c
     Core/Src/lcd_driver.c
+    Core/Src/as5600_driver.c
 )
 
 # Add include paths

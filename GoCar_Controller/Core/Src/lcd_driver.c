@@ -6,89 +6,7 @@
 #define SLAVE_ADDRESS_LCD (0x27 << 1)
 
 static I2C_HandleTypeDef *g_lcd_i2c;
-//static uint8_t lcd_addr;
-//static uint8_t backlight = 0x08;  // backlight ON
 
-#if 0
-static void lcd_write(I2C_HandleTypeDef *hi2c, uint8_t data)
-{
-    HAL_I2C_Master_Transmit(hi2c, lcd_addr << 1, &data, 1, HAL_MAX_DELAY);
-}
-
-static void lcd_enable(uint8_t data)
-{
-    uint8_t temp = data | 0x04;   // E = 1
-    lcd_write(temp);
-    HAL_Delay(1);
-
-    temp &= ~0x04;                // E = 0
-    lcd_write(temp);
-    HAL_Delay(1);
-}
-
-static void lcd_send_nibble(uint8_t nibble, uint8_t rs)
-{
-    uint8_t data = (nibble & 0xF0) | backlight;
-
-    if(rs)
-        data |= 0x01;  // RS = 1 (data)
-    else
-        data &= ~0x01; // RS = 0 (command)
-
-    lcd_enable(data);
-}
-
-static void lcd_send_byte(uint8_t byte, uint8_t rs)
-{
-    lcd_send_nibble(byte & 0xF0, rs);
-    lcd_send_nibble((byte << 4) & 0xF0, rs);
-}
-
-void lcd_init(I2C_HandleTypeDef *hi2c, uint8_t address)
-{
-    lcd_i2c = hi2c;
-    lcd_addr = address;
-
-    HAL_Delay(50);
-
-    lcd_send_nibble(0x30, 0);
-    HAL_Delay(5);
-    lcd_send_nibble(0x30, 0);
-    HAL_Delay(1);
-    lcd_send_nibble(0x30, 0);
-    HAL_Delay(10);
-
-    lcd_send_nibble(0x20, 0); // 4-bit mode
-    HAL_Delay(10);
-
-    lcd_send_byte(0x28, 0); // 2 lines, 5x8 font
-    lcd_send_byte(0x0C, 0); // display on
-    lcd_send_byte(0x06, 0); // entry mode
-    lcd_send_byte(0x01, 0); // clear
-    HAL_Delay(5);
-}
-
-void lcd_clear(void)
-{
-    lcd_send_byte(0x01, 0);
-    HAL_Delay(2);
-}
-
-void lcd_set_cursor(uint8_t row, uint8_t col)
-{
-    uint8_t addr = (row == 0) ? 0x80 + col : 0xC0 + col;
-    lcd_send_byte(addr, 0);
-}
-
-void lcd_print(char *str)
-{
-    while(*str)
-    {
-        lcd_send_byte((uint8_t)(*str), 1);
-        str++;
-    }
-}
-#else
 void lcd_send_cmd(char cmd)
 {
     char data_u, data_l;
@@ -173,4 +91,3 @@ void lcd_clear(void)
     lcd_send_cmd(0x01);
     HAL_Delay(2);
 }
-#endif
