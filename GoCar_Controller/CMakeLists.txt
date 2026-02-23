@@ -46,13 +46,17 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     Core/Src/main.c
-    Core/Src/lcd_driver.c
-    Core/Src/as5600_driver.c
+    Drivers/LCD/lcd_driver.c
+    Drivers/AS5600/as5600_driver.c
+    #Drivers/NRF24/nrf24_driver.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+    Drivers/LCD/
+    Drivers/AS5600/
+    #Drivers/NRF24/
 )
 
 # Add project symbols (macros)
