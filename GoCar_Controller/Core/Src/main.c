@@ -15,6 +15,7 @@
 #include "stm32f4xx_hal_uart.h"
 #include <stdio.h>
 #include "lcd_driver.h"
+#include "nrf24_driver.h"
 
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart1;
@@ -51,6 +52,7 @@ int main(void)
   MX_ADC1_Init();
   MX_SPI1_Init();
 
+  nrf_init(&hspi1);
   lcd_init(&hi2c1);
   lcd_clear();
 
